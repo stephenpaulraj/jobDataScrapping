@@ -16,12 +16,16 @@ main_div = soup.find('div', {'typeof': 'JobPosting'})
 # extracting basic job info
 basic_info_ul = main_div.find('ul', {'class': 'job-posting-brief'})
 li_of_basic_info = basic_info_ul.find_all('li')
-dd = (len(li_of_basic_info))
-for l in li_of_basic_info:
-    s = l.find_all('span')
-    # if s[0] == '<span aria-hidden="true" class="fas fa-map-marker-alt"></span>':
-    #     print('true')
-    print(s[0])
+s = li_of_basic_info[0].find_all('span')
+
+
+
+
+# for l in li_of_basic_info:
+#     s = l.find_all('span')
+#     # if s[0] == '<span aria-hidden="true" class="fas fa-map-marker-alt"></span>':
+#     #     print('true')
+#     print(s[0])
 
 
 
