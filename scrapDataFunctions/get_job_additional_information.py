@@ -2,7 +2,41 @@ def collect_job_additional_info(soup):
     addi_details = []
     comparison_chart = soup.find('div', {'class': 'comparisonchart'})
     all_divs = comparison_chart.find_all('div', {'property': True})
+    all_main_h4 = comparison_chart.find_all('h4')
     all_divs.pop(0)
+    dum = []
+
+    # Overview - Collect info
+
+    # Language
+    if comparison_chart.find('p', {'property': 'qualification'}) is not None:
+        h4 = all_main_h4[0].get_text().strip()
+        one_list = comparison_chart.find('p', {'property': 'qualification'}).get_text()
+        dum.append(h4)
+        dum.append(one_list)
+    else:
+        pass
+
+    # Education
+    education_ul = comparison_chart.find('ul', {'property': 'educationRequirements qualification'})
+    if education_ul is not None:
+        h4 = all_main_h4[1].get_text().strip()
+        one_list = education_ul.find('li').get_text().strip()
+        dum.append(h4)
+        dum.append(one_list)
+    else:
+        pass
+
+    # Experience
+    if comparison_chart.find('p', {'property': 'experienceRequirements qualification'}) is not None:
+        h4 = all_main_h4[2].get_text().strip()
+        one_list = comparison_chart.find('p', {'property': 'experienceRequirements qualification'}).get_text().strip()
+        dum.append(h4)
+        dum.append(one_list)
+    else:
+        pass
+
+
 
     for m in all_divs:
         details = []

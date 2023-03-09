@@ -1,9 +1,7 @@
 import json
-
-import requests
-from bs4 import BeautifulSoup
-
 from scrapDataFunctions import utils
+from scrapDataFunctions import hasura_calls
+import io
 
 
 def scrap_employer_data(url, link):
@@ -34,7 +32,7 @@ def scrap_employer_data(url, link):
         # noc number
         noc_no = job_region_a_tag[0].find('span', {'class': 'noc-no'}).get_text()
         noc = noc_no.split('NOC ')
-        with open('noc.json', 'r') as file:
+        with io.open('noc_folder/noc.json', 'r') as file:
             data = json.load(file)
             # ssss = '95105'
             ddd = data['data']['noc']
@@ -75,4 +73,13 @@ def scrap_employer_data(url, link):
         employer_employer_details.append(latitude)
         employer_employer_details.append(longitude)
 
-    return employer_temp
+        print('Inserting Employer Data...')
+
+        employer_id = hasura_calls.insert_employer_info(emp_name, noc_id, job_location_province,
+                                                        job[0], emp_url, email, latitude, longitude,
+                                                        job_location_address)
+
+        print(emp_name, noc_id, job_location_province,
+              job[0], emp_url, email, latitude, longitude,
+              job_location_address)
+    return employer_id

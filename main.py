@@ -190,7 +190,7 @@ async def collect_company_info():
         # noc number
         noc_no = job_region_a_tag[0].find('span', {'class': 'noc-no'}).get_text()
         noc = noc_no.split('NOC ')
-        with open('noc.json', 'r') as file:
+        with open('noc_folder/noc.json', 'r') as file:
             data = json.load(file)
             #ssss = '95105'
             ddd = data['data']['noc']
