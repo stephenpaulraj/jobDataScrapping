@@ -1,14 +1,17 @@
+import asyncio
 import re
 from datetime import datetime as dsf
+from scrapDataFunctions import hasura_calls
 
 
-def collect_job_basic_information(soup):
+def collect_job_basic_information(soup, emp_id):
     job_temp = []
     main_div = soup.find('div', {'typeof': 'JobPosting'})
 
     # job position name
     job_name_h1 = main_div.find('h1')
     job_name = job_name_h1.find('span', {'property': 'title'}).get_text().strip().title()
+    job_temp.append(job_name)
 
     # Date of job posted
     date_p_tag = main_div.find('p', {'class': 'date-business'})
@@ -19,6 +22,7 @@ def collect_job_basic_information(soup):
     ss = str(date_1)
     new_date = dsf.strptime(ss, '%Y-%m-%d %H:%M:%S')
     sd = new_date.strftime('%d-%m-%Y')
+    job_temp.append(new_date)
 
     # Job posting summary
     job_posting_ul = main_div.find('ul', {'class': 'job-posting-brief'})
@@ -44,4 +48,7 @@ def collect_job_basic_information(soup):
     work_hours_span = job_posting_li[1].find('span', {'property': 'workHours'}).get_text().strip()
     job_temp.append(work_hours_span)
 
-    return job_temp
+    job_id = asyncio.run(
+        hasura_calls.insert_job_basic_info(emp_id, job_name, base_salary, work_hours_span, job_location, str(new_date)))
+
+    return job_id

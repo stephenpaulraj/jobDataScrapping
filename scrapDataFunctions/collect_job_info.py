@@ -1,16 +1,8 @@
-import re
-from datetime import datetime as dsf
-import colorama
-from colorama import Fore
-
 import requests
 from bs4 import BeautifulSoup
-import json
-from scrapDataFunctions import utils
-from scrapDataFunctions import get_employer
-from scrapDataFunctions import get_job_basic_information
-from scrapDataFunctions import get_job_detail_information
-from scrapDataFunctions import get_job_additional_information
+from colorama import Fore
+
+from scrapDataFunctions import get_employer, get_job_detail_information
 
 
 def collect_company_info(url_data):
@@ -18,7 +10,6 @@ def collect_company_info(url_data):
     employer_temp = []
     job_temp = []
     addi_details = []
-    count = 0
     link = url_data
     for index, li in enumerate(link):
         print(Fore.GREEN + '-- Data Collecting ' + str(index + 1) + ' / ' + str(len(link)) + ' URL')
@@ -30,7 +21,6 @@ def collect_company_info(url_data):
         # ================================================================= #
 
         emp_data = get_employer.scrap_employer_data(soup, li)
-        print(emp_data)
 
         print(Fore.GREEN + '---- Employer Data Collected for ' + str(index + 1) + ' / ' + str(len(link)) + ' URL')
 

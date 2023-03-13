@@ -6,11 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import requests
-import main
 from datetime import datetime
 
-url_list = main.collect_main_urls_list()
-url = url_list[:1]
 
 
 
@@ -315,170 +312,196 @@ main_div = soup.find('div', {'typeof': 'JobPosting'})
 # # ===========================================================================================
 #
 comparison_chart = soup.find('div', {'class': 'comparisonchart'})
-all_main_h4 = comparison_chart.find_all('h4')
-all_divs = comparison_chart.find_all('div')
-temp = []
-
-
-# Language
-if comparison_chart.find('p', {'property': 'qualification'}) is not None:
-    h4 = all_main_h4[0].get_text().strip()
-    one_list = comparison_chart.find('p', {'property': 'qualification'}).get_text()
-    temp.append(h4)
-    temp.append(one_list)
-else:
-    pass
-
-# Education
-education_ul = comparison_chart.find('ul', {'property': 'educationRequirements qualification'})
-if education_ul is not None:
-    h4 = all_main_h4[1].get_text().strip()
-    one_list = education_ul.find('li').get_text().strip()
-    temp.append(h4)
-    temp.append(one_list)
-else:
-    pass
-
-# Experience
-if comparison_chart.find('p', {'property': 'experienceRequirements qualification'}) is not None:
-    h4 = all_main_h4[2].get_text().strip()
-    one_list = comparison_chart.find('p', {'property': 'experienceRequirements qualification'}).get_text().strip()
-    temp.append(h4)
-    temp.append(one_list)
-else:
-    pass
-s = []
-if comparison_chart.find('div', {'property': ''}):
-    work_div = comparison_chart.find('div', {'property': ''})
-    h4_tag = work_div.find_all('h4')
-    ul_tag = work_div.find_all('ul')
-    for i in h4_tag:
-        h4 = i.get_text()
-    for j in ul_tag:
-        content_li = j.find_all('li')
-        for k in content_li:
-            content = k.get_text().strip()
-else:
-    h3 = 'Work setting'
-    h4 = '0'
-    content = '0'
-
-if comparison_chart.find('div', {'property': 'responsibilities'}):
-    responsibilities_div = comparison_chart.find('div', {'property': 'responsibilities'})
-    res_h3 = responsibilities_div.find('h3').get_text()
-    res_h4_tag = responsibilities_div.find_all('h4')
-    res_ul_tag = responsibilities_div.find_all('ul')
-    for l in res_h4_tag:
-        res_h4 = l.get_text()
-    for m in res_ul_tag:
-        res_li = m.find_all('li')
-        for n in res_li:
-            res_content = n.get_text().strip()
-else:
-    res_h3 = 'Responsibilities'
-    res_h4 = '0'
-    res_content = '0'
-
-skills_div = comparison_chart.find_all('div', {'property': 'skills'})
-if len(skills_div) > 1:
-    h3_tag_1 = skills_div[0].find('h3').get_text()
-    h3_tag_2 = skills_div[1].find('h3').get_text()
-    if h3_tag_1 == 'Credentials' and h3_tag_2 == 'Additional information':
-        cred_h4_tag = skills_div[0].find_all('h4')
-        cred_ul_tag = skills_div[0].find_all('ul')
-        addi_h4_tag = skills_div[1].find_all('h4')
-        addi_ul_tag = skills_div[1].find_all('ul')
-        for p in cred_h4_tag:
-            cred_h4 = p.get_text()
-        for q in cred_ul_tag:
-            cred_li = q.find_all('li')
-            for r in cred_li:
-                cred_content = r.get_text()
-        for s in addi_h4_tag:
-            addi_h4 = s.get_text()
-        for t in addi_ul_tag:
-            addi_li = t.find_all('li')
-            for v in addi_li:
-                addi_content = v.get_text()
-
-else:
-    h3_tag = skills_div.find('h3').get_text()
-    if h3_tag == 'Credentials':
-        cred_h4_tag = skills_div[0].finda_all('h4')
-        cred_ul_tag = skills_div[0].find_all('ul')
-        for p in cred_h4_tag:
-            cred_h4 = p.get_text()
-        for q in cred_ul_tag:
-            cred_li = q.find_all('li')
-            for r in cred_li:
-                cred_content = r.get_text()
-
-    elif h3_tag == 'Additional information':
-        addi_h4_tag = skills_div[0].finda_all('h4')
-        addi_ul_tag = skills_div[0].find_all('ul')
-        for s in addi_h4_tag:
-            addi_h4 = s.get_text()
-        for t in addi_ul_tag:
-            addi_li = t.find_all('li')
-            for v in addi_li:
-                addi_content = v.get_text()
-    else:
-        cred_h4 = '0'
-        cred_content = '0'
-        addi_h4 = '0'
-        addi_content = '0'
-
-if comparison_chart.find('div', {'property': 'experienceRequirements'}):
-    experience_specialization_div = comparison_chart.find('div', {'property': 'experienceRequirements'})
-    exp_h3 = experience_specialization_div.find('h3').get_text()
-    exp_h4_tag = experience_specialization_div.find_all('h4')
-    exp_ul_tag = experience_specialization_div.find_all('ul')
-    for a in exp_h4_tag:
-        exp_h4 = a.get_text()
-    for b in exp_ul_tag:
-        exp_li = b.find_all('li')
-        for c in exp_li:
-            exp_content = c.get_text().strip()
-else:
-    exp_h3 = 'experience and specialization'
-    exp_h4 = '0'
-    exp_content = '0'
-
-if comparison_chart.find('div', {'property': 'jobBenefits'}):
-    benefits_div = comparison_chart.find('div', {'property': 'jobBenefits'})
-    benefits_h3 = benefits_div.find('h3').get_text()
-    benefits_h4_tag = benefits_div.find_all('h4')
-    benefits_ul_tag = benefits_div.find_all('ul')
-    for d in benefits_h4_tag:
-        benefits_h4 = d.get_text().strip()
-    for e in benefits_ul_tag:
-        benefits_li = e.find_all('li')
-        for f in benefits_li:
-            benefits_content = f.get_text().strip()
-else:
-    benefits_h3 = 'Benefits'
-    benefits_h4 = '0'
-    benefits_content = '0'
-
-
-
-for m in all_divs:
-    details = []
-    all_h3_tag = m.find_all('h3')
-    for h in all_h3_tag:
-        h3 = h.get_text().strip()
-        temp.append(h3)
-    all_h4_tag = m.find_all('h4')
-    for k in all_h4_tag:
-        h4 = k.get_text().strip()
-        temp.append(h4)
-    all_ul_tag = m.find_all('ul')
-    for li_s in all_ul_tag:
-        all_list = li_s.find_all('li')
-        for jj in all_list:
-            one_list = jj.get_text().strip()
-            temp.append(one_list)
+# all_main_h4 = comparison_chart.find_all('h4')
+# all_divs = comparison_chart.find_all('div')
+#
+#
+# # Language
+# if comparison_chart.find('p', {'property': 'qualification'}) is not None:
+#     h4 = all_main_h4[0].get_text().strip()
+#     one_list = comparison_chart.find('p', {'property': 'qualification'}).get_text()
+#     temp.append(h4)
+#     temp.append(one_list)
+# else:
+#     pass
+#
+# # Education
+# education_ul = comparison_chart.find('ul', {'property': 'educationRequirements qualification'})
+# if education_ul is not None:
+#     h4 = all_main_h4[1].get_text().strip()
+#     one_list = education_ul.find('li').get_text().strip()
+#     temp.append(h4)
+#     temp.append(one_list)
+# else:
+#     pass
+#
+# # Experience
+# if comparison_chart.find('p', {'property': 'experienceRequirements qualification'}) is not None:
+#     h4 = all_main_h4[2].get_text().strip()
+#     one_list = comparison_chart.find('p', {'property': 'experienceRequirements qualification'}).get_text().strip()
+#     temp.append(h4)
+#     temp.append(one_list)
+# else:
+#     pass
+#
+#
+# s = []
+# if comparison_chart.find('div', {'property': ''}):
+#     work_div = comparison_chart.find('div', {'property': ''})
+#     h4_tag = work_div.find_all('h4')
+#     ul_tag = work_div.find_all('ul')
+#     for i in h4_tag:
+#         h4 = i.get_text()
+#     for j in ul_tag:
+#         content_li = j.find_all('li')
+#         for k in content_li:
+#             content = k.get_text().strip()
+# else:
+#     h3 = 'Work setting'
+#     h4 = '0'
+#     content = '0'
+#
+# if comparison_chart.find('div', {'property': 'responsibilities'}):
+#     responsibilities_div = comparison_chart.find('div', {'property': 'responsibilities'})
+#     res_h3 = responsibilities_div.find('h3').get_text()
+#     res_h4_tag = responsibilities_div.find_all('h4')
+#     res_ul_tag = responsibilities_div.find_all('ul')
+#     for l in res_h4_tag:
+#         res_h4 = l.get_text()
+#     for m in res_ul_tag:
+#         res_li = m.find_all('li')
+#         for n in res_li:
+#             res_content = n.get_text().strip()
+# else:
+#     res_h3 = 'Responsibilities'
+#     res_h4 = '0'
+#     res_content = '0'
+#
+# skills_div = comparison_chart.find_all('div', {'property': 'skills'})
+# if len(skills_div) > 1:
+#     h3_tag_1 = skills_div[0].find('h3').get_text()
+#     h3_tag_2 = skills_div[1].find('h3').get_text()
+#     if h3_tag_1 == 'Credentials' and h3_tag_2 == 'Additional information':
+#         cred_h4_tag = skills_div[0].find_all('h4')
+#         cred_ul_tag = skills_div[0].find_all('ul')
+#         addi_h4_tag = skills_div[1].find_all('h4')
+#         addi_ul_tag = skills_div[1].find_all('ul')
+#         for p in cred_h4_tag:
+#             cred_h4 = p.get_text()
+#         for q in cred_ul_tag:
+#             cred_li = q.find_all('li')
+#             for r in cred_li:
+#                 cred_content = r.get_text()
+#         for s in addi_h4_tag:
+#             addi_h4 = s.get_text()
+#         for t in addi_ul_tag:
+#             addi_li = t.find_all('li')
+#             for v in addi_li:
+#                 addi_content = v.get_text()
+#
+# else:
+#     h3_tag = skills_div.find('h3').get_text()
+#     if h3_tag == 'Credentials':
+#         cred_h4_tag = skills_div[0].finda_all('h4')
+#         cred_ul_tag = skills_div[0].find_all('ul')
+#         for p in cred_h4_tag:
+#             cred_h4 = p.get_text()
+#         for q in cred_ul_tag:
+#             cred_li = q.find_all('li')
+#             for r in cred_li:
+#                 cred_content = r.get_text()
+#
+#     elif h3_tag == 'Additional information':
+#         addi_h4_tag = skills_div[0].finda_all('h4')
+#         addi_ul_tag = skills_div[0].find_all('ul')
+#         for s in addi_h4_tag:
+#             addi_h4 = s.get_text()
+#         for t in addi_ul_tag:
+#             addi_li = t.find_all('li')
+#             for v in addi_li:
+#                 addi_content = v.get_text()
+#     else:
+#         cred_h4 = '0'
+#         cred_content = '0'
+#         addi_h4 = '0'
+#         addi_content = '0'
+#
+# if comparison_chart.find('div', {'property': 'experienceRequirements'}):
+#     experience_specialization_div = comparison_chart.find('div', {'property': 'experienceRequirements'})
+#     exp_h3 = experience_specialization_div.find('h3').get_text()
+#     exp_h4_tag = experience_specialization_div.find_all('h4')
+#     exp_ul_tag = experience_specialization_div.find_all('ul')
+#     for a in exp_h4_tag:
+#         exp_h4 = a.get_text()
+#     for b in exp_ul_tag:
+#         exp_li = b.find_all('li')
+#         for c in exp_li:
+#             exp_content = c.get_text().strip()
+# else:
+#     exp_h3 = 'experience and specialization'
+#     exp_h4 = '0'
+#     exp_content = '0'
+#
+# if comparison_chart.find('div', {'property': 'jobBenefits'}):
+#     benefits_div = comparison_chart.find('div', {'property': 'jobBenefits'})
+#     benefits_h3 = benefits_div.find('h3').get_text()
+#     benefits_h4_tag = benefits_div.find_all('h4')
+#     benefits_ul_tag = benefits_div.find_all('ul')
+#     for d in benefits_h4_tag:
+#         benefits_h4 = d.get_text().strip()
+#     for e in benefits_ul_tag:
+#         benefits_li = e.find_all('li')
+#         for f in benefits_li:
+#             benefits_content = f.get_text().strip()
+# else:
+#     benefits_h3 = 'Benefits'
+#     benefits_h4 = '0'
+#     benefits_content = '0'
+#
+#
+#
+# for m in all_divs:
+#     details = []
+#     all_h3_tag = m.find_all('h3')
+#     for h in all_h3_tag:
+#         h3 = h.get_text().strip()
+#         temp.append(h3)
+#     all_h4_tag = m.find_all('h4')
+#     for k in all_h4_tag:
+#         h4 = k.get_text().strip()
+#         temp.append(h4)
+#     all_ul_tag = m.find_all('ul')
+#     for li_s in all_ul_tag:
+#         all_list = li_s.find_all('li')
+#         for jj in all_list:
+#             one_list = jj.get_text().strip()
+#             temp.append(one_list)
 
     # temp.append(details)
-
+overview_h4 = comparison_chart.find_all('h4')[:3]
+setting = comparison_chart.find_all('div', {'property': True})
+work = setting[0]
+work_h4 = work.find_all('h4')
+work_ul = work.find_all('ul')
+iu = []
+work_arr = []
+for l in work_h4:
+    work_topic = l.get_text()
+    work_arr.append(work_topic)
+for i in work_ul:
+    li = i.find_all('li')
+    for m in li:
+        content = m.get_text().strip()
+        work_arr.append(content)
+iu.append(work_arr)
+summa = []
+for j in overview_h4:
+    ss = []
+    sub_topic = j.get_text()
+    overview_content = j.find_next().get_text().strip()
+    ss.append('Overview')
+    ss.append(sub_topic)
+    ss.append(overview_content)
+    summa.append(ss)
+print(summa)
 

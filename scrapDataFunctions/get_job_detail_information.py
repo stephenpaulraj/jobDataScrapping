@@ -1,4 +1,7 @@
-def collect_job_detail_info(soup):
+import asyncio
+from scrapDataFunctions import hasura_calls
+
+def collect_job_detail_info(soup, j_id):
     job_temp = []
     main_div = soup.find('div', {'typeof': 'JobPosting'})
     job_posting_ul = main_div.find('ul', {'class': 'job-posting-brief'})
@@ -117,4 +120,7 @@ def collect_job_detail_info(soup):
             job_type = "Not available"
             job_temp.append(job_type)
 
-    return job_temp
+    job_details_id = asyncio.run(hasura_calls.insert_job_details_info(j_id, term_of_employment, special_commitments,
+                                 start_date, job_benefits, vacancy, job_type))
+
+    return job_details_id

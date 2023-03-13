@@ -10,7 +10,8 @@ print('---- Step 1 - Collecting Jobs for previous ' + str(days_for_jobs_to_scrap
 
 # Step 2 - Get Job and Employer Data
 print('Running Step - 2 .... ')
-final_data = collect_job_info.collect_company_info(individualUrlList[:2])
+print(individualUrlList)
+final_data = collect_job_info.collect_company_info(individualUrlList)
 
 
 
